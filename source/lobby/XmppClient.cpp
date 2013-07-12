@@ -60,7 +60,7 @@ std::string StanzaErrorToString(StanzaError& err)
   switch (err)
   {
     CASE(StanzaErrorBadRequest, "Bad request")
-    CASE(StanzaErrorConflict, "Player name already used")
+    CASE(StanzaErrorConflict, "Player name already in use")
     CASE(StanzaErrorFeatureNotImplemented, "Feature not implemented")
     CASE(StanzaErrorForbidden, "Forbidden")
     CASE(StanzaErrorGone, "Recipient or server gone")

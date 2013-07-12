@@ -48,7 +48,7 @@ function cancelSetup()
 {
 	if (g_IsConnecting)
 		Engine.DisconnectNetworkGame();
-
+	warn("cancel");
 	Engine.PopGuiPage();
 }
 
@@ -191,7 +191,8 @@ function startHost(playername, servername)
 
 	startConnectionStatus("server");
 	g_ServerName = servername;
-
+	// Set player lobby presence
+	Engine.LobbySetPlayerPresence("playing");
 	return true;
 }
 
@@ -211,5 +212,7 @@ function startJoin(playername, ip)
 	}
 
 	startConnectionStatus("client");
+	// Set player lobby presence
+	Engine.LobbySetPlayerPresence("playing");
 	return true;
 }

@@ -5,7 +5,7 @@
 
   <script file="gui/common/functions_global_object.js"/>
   <script file="gui/common/functions_utility.js"/>
-
+  <script file="gui/common/timer.js"/>
   <object type="image" style="StoneWindow" size="0 0 100% 100%" name="lobbyWindow">
 
     <object style="TitleText" type="text" size="50%-128 0%+4 50%+128 36">
@@ -81,20 +81,20 @@
       <object name="gamesBox"
         style="StoneList"
         type="olist"
-        size="350 0 100% 100%-50"
+        size="350 0 100% 100%-40"
         tooltip_style="pgFloatingToolTip"
         sprite_heading="colour:0 0 0 255"
         textcolor="210 100 0 255">
         <action on="SelectionChange"> selectGame(this.selected);</action>
-        <def id="name" heading="Name" color="0 60 0" width="200"/>
+        <def id="name" heading="Name" color="0 60 0" width="180"/>
         <!--<def id="ip" heading="IP" color="0 128 128" width="170"/>-->
-        <def id="mapName" heading="Map name" color="128 128 128" width="120"/>
+        <def id="mapName" heading="Map name" color="128 128 128" width="140"/>
         <def id="mapSize" heading="Map size" color="128 128 128" width="100"/>
         <def id="victoryCondition" heading="Victory" color="0 128 128" width="100"/>
         <def id="nPlayers" heading="Players" color="0 128 128" width="30"/>
       </object>
 
-      <object name="filterPanel" size="380 100%-140 890 100%-10" type="image" sprite="BackgroundIndentFillDark" hidden="true">
+      <object name="filterPanel" size="380 100%-140 700 100%-10" type="image" sprite="BackgroundIndentFillDark" hidden="true">
         <object type="text" size="10 10 110 30" text_align="left" textcolor="white">Map size :</object>
         <object name="mapSizeFilter"
           type="dropdown"
@@ -135,7 +135,7 @@
 
       </object>
 
-      <object name="gamesBar" size="350 100%-40 100% 100%">
+      <object name="gamesBar" size="350 100%-35 100% 100%">
         <object type="button" style="StoneButton" size="0 0 20 20">
           >>
           <action on="Press"><![CDATA[
@@ -149,20 +149,8 @@
           {
             this.caption = ">>";
             getGUIObjectByName("filterPanel").hidden = true;
-            getGUIObjectByName("gamesBox").size="350 0 100% 100%-50";
+            getGUIObjectByName("gamesBox").size="350 0 100% 100%-40";
           }
-          ]]>
-          </action>
-        </object>
-
-        <object name="updateStatusText" size="100%-340 0 100%-140 20" type="text" style="RightLabelText"/>
-
-        <object name="hostButton" type="button" style="StoneButton" size="100%-100 0 100% 20">
-          Host Game
-          <action on="Press">
-          <![CDATA[
-            // Open Multiplayer connection window with host option.
-            Engine.PushGuiPage("page_gamesetup_mp.xml", { multiplayerGameType: "host", name: g_Name });
           ]]>
           </action>
         </object>
@@ -174,10 +162,10 @@
       <object name="playersBox"
         style="StoneList"
         type="olist"
-        size="100%-200 0 100% 100%-40"
+        size="100%-210 0 100% 100%-10"
         tooltip_style="pgFloatingToolTip"
-        sprite_heading="colour:0 0 0 255">
-        <def id="status" heading="S" color="0 60 60" width="30"/>
+        sprite_heading="colour:0 0 0">
+        <def id="status" heading="Status" color="0 60 60" width="60"/>
         <def id="name" heading="Name" color="0 60 0" width="50"/>
       </object>
 
@@ -193,18 +181,17 @@
         </object>
       </object>
     </object>
-
       <object name="navBar" size="20 25 100%-20 45">
-        <object type="button" style="StoneButton" size="100%-340 0 100%-240 20">
-          Connect
-          <action on="Press">lobbyConnect();</action>
+        <object name="updateStatusText" size="100%-440 0 100%-240 20" type="text" style="RightLabelText"/>
+        <object name="hostButton" type="button" style="StoneButton" size="100%-220 0 100%-120 20">
+          Host Game
+          <action on="Press">
+          <![CDATA[
+            // Open Multiplayer connection window with host option.
+            Engine.PushGuiPage("page_gamesetup_mp.xml", { multiplayerGameType: "host", name: g_Name });
+          ]]>
+          </action>
         </object>
-
-        <object type="button" style="StoneButton" size="100%-220 0 100%-120 20">
-          Disconnect
-          <action on="Press">lobbyDisconnect();</action>
-        </object>
-
         <object type="button" style="StoneButton" size="100%-100 0 100% 20">
           Main Menu
           <action on="Press">

@@ -393,8 +393,7 @@ function handleNetMessage(message)
 		switch (message.status)
 		{
 		case "disconnected":
-			Engine.DisconnectNetworkGame();
-			if (g_IsController) Engine.SendUnregisterGame();
+			cancelSetup();
 			Engine.PopGuiPage();
 			reportDisconnect(message.reason);
 			break;
