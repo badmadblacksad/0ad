@@ -259,11 +259,19 @@ CScriptVal StartSavedGame(void* cbdata, std::wstring name)
 	return metadata.get();
 }
 
-void SaveGame(void* cbdata)
+void SaveGame(void* cbdata, std::wstring filename, std::wstring description)
 {
 	CGUIManager* guiManager = static_cast<CGUIManager*> (cbdata);
 
-	if (SavedGames::Save(L"quicksave", *g_Game->GetSimulation2(), guiManager, g_Game->GetPlayerID()) < 0)
+	if (SavedGames::Save(filename, description, *g_Game->GetSimulation2(), guiManager, g_Game->GetPlayerID()) < 0)
+		LOGERROR(L"Failed to save game");
+}
+
+void SaveGamePrefix(void* cbdata, std::wstring prefix, std::wstring description)
+{
+	CGUIManager* guiManager = static_cast<CGUIManager*> (cbdata);
+
+	if (SavedGames::SavePrefix(prefix, description, *g_Game->GetSimulation2(), guiManager, g_Game->GetPlayerID()) < 0)
 		LOGERROR(L"Failed to save game");
 }
 
@@ -663,42 +671,42 @@ void DisconnectXmppClient(void* UNUSED(cbdata))
 
 void RecvXmppClient(void* UNUSED(cbdata))
 {
-	if(!g_XmppClient)
+	if (!g_XmppClient)
 		return;
 	g_XmppClient->recv();
 }
 
 void SendGetGameList(void* UNUSED(cbdata))
 {
-	if(!g_XmppClient)
+	if (!g_XmppClient)
 		return;
 	g_XmppClient->SendIqGetGameList();
 }
 
 void SendRegisterGame(void* UNUSED(cbdata), CScriptVal data)
 {
-	if(!g_XmppClient)
+	if (!g_XmppClient)
 		return;
 	g_XmppClient->SendIqRegisterGame(data);
 }
 
 void SendUnregisterGame(void* UNUSED(cbdata))
 {
-	if(!g_XmppClient)
+	if (!g_XmppClient)
 		return;
 	g_XmppClient->SendIqUnregisterGame();
 }
 
 void SendChangeStateGame(void* UNUSED(cbdata), std::string nbp, std::string players)
 {
-	if(!g_XmppClient)
+	if (!g_XmppClient)
 		return;
 	g_XmppClient->SendIqChangeStateGame(nbp, players);
 }
 
 CScriptVal GetPlayerList(void* UNUSED(cbdata))
 {
-	if(!g_XmppClient)
+	if (!g_XmppClient)
 		return CScriptVal();
 
 	CScriptValRooted playerList = g_XmppClient->GUIGetPlayerList();
@@ -708,7 +716,7 @@ CScriptVal GetPlayerList(void* UNUSED(cbdata))
 
 CScriptVal GetGameList(void* UNUSED(cbdata))
 {
-	if(!g_XmppClient)
+	if (!g_XmppClient)
 		return CScriptVal();
 
 	CScriptValRooted gameList = g_XmppClient->GUIGetGameList();
@@ -718,7 +726,7 @@ CScriptVal GetGameList(void* UNUSED(cbdata))
 
 CScriptVal LobbyGuiPollMessage(void* UNUSED(cbdata))
 {
-	if(!g_XmppClient)
+	if (!g_XmppClient)
 		return CScriptVal();
 
 	CScriptValRooted poll = g_XmppClient->GuiPollMessage();
@@ -728,7 +736,7 @@ CScriptVal LobbyGuiPollMessage(void* UNUSED(cbdata))
 
 void LobbySendMessage(void* UNUSED(cbdata), std::string message)
 {
-	if(!g_XmppClient)
+	if (!g_XmppClient)
 		return;
 
 	g_XmppClient->SendMUCMessage(message);
@@ -757,10 +765,44 @@ void SetDefaultLobbyPlayerPair(void * UNUSED(cbdata), std::string username, std:
 
 void LobbySetPlayerPresence(void* UNUSED(cbdata), std::string presence)
 {
-	if(!g_XmppClient)
+	if (!g_XmppClient)
 		return;
 
 	g_XmppClient->SetPresence(presence);
+}
+
+void LobbySetNick(void* UNUSED(cbdata), std::string nick)
+{
+	if (!g_XmppClient)
+		return;
+
+	g_XmppClient->SetNick(nick);
+}
+
+void LobbyKick(void* UNUSED(cbdata), std::string nick, std::string reason)
+{
+	if (!g_XmppClient)
+		return;
+
+	g_XmppClient->kick(nick, reason);
+}
+
+void LobbyBan(void* UNUSED(cbdata), std::string nick, std::string reason)
+{
+	if (!g_XmppClient)
+		return;
+
+	g_XmppClient->ban(nick, reason);
+}
+
+std::string LobbyGetPlayerPresence(void* UNUSED(cbdata), std::string nickname)
+{
+	if (!g_XmppClient)
+		return "";
+
+	std::string presence;
+	g_XmppClient->GetPresence(nickname, presence);
+	return presence;
 }
 
 /* End lobby related functions */
@@ -817,7 +859,8 @@ void GuiScriptingInit(ScriptInterface& scriptInterface)
 	scriptInterface.RegisterFunction<CScriptVal, std::wstring, &StartSavedGame>("StartSavedGame");
 	scriptInterface.RegisterFunction<std::vector<CScriptValRooted>, &GetSavedGames>("GetSavedGames");
 	scriptInterface.RegisterFunction<bool, std::wstring, &DeleteSavedGame>("DeleteSavedGame");
-	scriptInterface.RegisterFunction<void, &SaveGame>("SaveGame");
+	scriptInterface.RegisterFunction<void, std::wstring, std::wstring, &SaveGame>("SaveGame");
+	scriptInterface.RegisterFunction<void, std::wstring, std::wstring, &SaveGamePrefix>("SaveGamePrefix");
 	scriptInterface.RegisterFunction<void, &QuickSave>("QuickSave");
 	scriptInterface.RegisterFunction<void, &QuickLoad>("QuickLoad");
 
@@ -887,4 +930,8 @@ void GuiScriptingInit(ScriptInterface& scriptInterface)
 	scriptInterface.RegisterFunction<std::string, &GetDefaultLobbyPlayerPassword>("GetDefaultLobbyPlayerPassword");
 	scriptInterface.RegisterFunction<void, std::string, std::string, &SetDefaultLobbyPlayerPair>("SetDefaultLobbyPlayerPair");
 	scriptInterface.RegisterFunction<void, std::string, &LobbySetPlayerPresence>("LobbySetPlayerPresence");
+	scriptInterface.RegisterFunction<void, std::string, &LobbySetNick>("LobbySetNick");
+	scriptInterface.RegisterFunction<void, std::string, std::string, &LobbyKick>("LobbyKick");
+	scriptInterface.RegisterFunction<void, std::string, std::string, &LobbyBan>("LobbyBan");
+	scriptInterface.RegisterFunction<std::string, std::string, &LobbyGetPlayerPresence>("LobbyGetPlayerPresence");
 }

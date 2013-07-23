@@ -21,41 +21,41 @@
 #include <string>
 
 #define ITEMS \
-  ITEM(name)      \
-  ITEM(ip)        \
-  ITEM(state)     \
-  ITEM(nbp)       \
-  ITEM(tnbp)      \
-  ITEM(players)   \
-  ITEM(mapName)   \
-  ITEM(mapSize)   \
-  ITEM(victoryCondition)
+	ITEM(name)      \
+	ITEM(ip)        \
+	ITEM(state)     \
+	ITEM(nbp)       \
+	ITEM(tnbp)      \
+	ITEM(players)   \
+	ITEM(mapName)   \
+	ITEM(mapSize)   \
+	ITEM(victoryCondition)
 
 class GameItemData
 {
-  friend class XmppClient;
-  friend class GameListQuery;
+	friend class XmppClient;
+	friend class GameListQuery;
 public:
-  GameItemData() {}
+	GameItemData() {}
 
-  virtual ~GameItemData() {}
+	virtual ~GameItemData() {}
 
-  gloox::Tag* tag() const
-  {
-    gloox::Tag* i = new gloox::Tag( "game" );
+	gloox::Tag* tag() const
+	{
+		gloox::Tag* i = new gloox::Tag( "game" );
 
 #define ITEM(param)\
-    i->addAttribute( #param, m_##param );
-    ITEMS
+	i->addAttribute( #param, m_##param );
+		ITEMS
 #undef ITEM
 
-    return i;
-  }
+		return i;
+	}
 
 protected:
 #define ITEM(param)\
-  std::string m_##param ;
-  ITEMS
+	std::string m_##param ;
+	ITEMS
 #undef ITEM
 };
 

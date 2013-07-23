@@ -22,7 +22,7 @@ var EntityTemplate = Class({
 	},
 
 	classes: function() {
-		if (!this._template.Identity || !this._template.Identity.Classes)
+		if (!this._template.Identity || !this._template.Identity.Classes || !this._template.Identity.Classes._string)
 			return undefined;
 		return this._template.Identity.Classes._string.split(/\s+/);
 	},
@@ -217,11 +217,9 @@ var EntityTemplate = Class({
 		for (var i in this._template.Attack) {
 			if (!this._template.Attack[i].Bonuses)
 				continue;
-			for (var o in this._template.Attack[i].Bonuses) {
-				if (this._template.Attack[i].Bonuses[o].Classes == undefined)
-					continue;
-				Classes.push([this._template.Attack[i].Bonuses[o].Classes.split(" "), +this._template.Attack[i].Bonuses[o].Multiplier]);
-			}
+			for (var o in this._template.Attack[i].Bonuses)
+				if (this._template.Attack[i].Bonuses[o].Classes)
+					Classes.push([this._template.Attack[i].Bonuses[o].Classes.split(" "), +this._template.Attack[i].Bonuses[o].Multiplier]);
 		}
 		return Classes;
 	},
@@ -235,11 +233,9 @@ var EntityTemplate = Class({
 		for (var i in this._template.Attack) {
 			if (!this._template.Attack[i].Bonuses)
 				continue;
-			for (var o in this._template.Attack[i].Bonuses) {
-				if (this._template.Attack[i].Bonuses[o].Classes == undefined)
-					continue;
-				mcounter.concat(this._template.Attack[i].Bonuses[o].Classes.split(" "));
-			}
+			for (var o in this._template.Attack[i].Bonuses)
+				if (this._template.Attack[i].Bonuses[o].Classes)
+					mcounter.concat(this._template.Attack[i].Bonuses[o].Classes.split(" "));
 		}
 		for (var i in classes)
 		{
@@ -248,21 +244,21 @@ var EntityTemplate = Class({
 		}
 		return false;
 	},
-						   
+
 	// returns, if it exists, the multiplier from each attack against a given class
 	getMultiplierAgainst: function(type, againstClass) {
 		if (!this._template.Attack || !this._template.Attack[type])
 			return undefined;
 
 		if (this._template.Attack[type].Bonuses)
-			for (var o in this._template.Attack[type].Bonuses)
-				if (this._template.Attack[type].Bonuses[o].Classes !== undefined)
-				{
-					var total = this._template.Attack[type].Bonuses[o].Classes.split(" ");
-					for (var j in total)
-						if (total[j] === againstClass)
-							return this._template.Attack[type].Bonuses[o].Multiplier;
-				}
+			for (var o in this._template.Attack[type].Bonuses) {
+				if (!this._template.Attack[type].Bonuses[o].Classes)
+					continue;
+				var total = this._template.Attack[type].Bonuses[o].Classes.split(" ");
+				for (var j in total)
+					if (total[j] === againstClass)
+						return this._template.Attack[type].Bonuses[o].Multiplier;
+			}
 		return 1;
 	},
 
@@ -272,7 +268,7 @@ var EntityTemplate = Class({
 			return false;
 		
 		for (var i in this._template.Attack) {
-			if (!this._template.Attack[i].RestrictedClasses)
+			if (!this._template.Attack[i].RestrictedClasses || !this._template.Attack[i].RestrictedClasses._string)
 				continue;
 			var cannotAttack = this._template.Attack[i].RestrictedClasses._string.split(" ");
 			if (cannotAttack.indexOf(saidClass) !== -1)
@@ -282,15 +278,17 @@ var EntityTemplate = Class({
 	},
 
 	buildableEntities: function() {
-		if (!this._template.Builder || !this._template.Builder.Entities._string)
+		if (!this._template.Builder)
 			return undefined;
+		if (!this._template.Builder.Entities._string)
+			return [];
 		var civ = this.civ();
 		var templates = this._template.Builder.Entities._string.replace(/\{civ\}/g, civ).split(/\s+/);
 		return templates; // TODO: map to Entity?
 	},
 
 	trainableEntities: function() {
-		if (!this._template.ProductionQueue || !this._template.ProductionQueue.Entities) 
+		if (!this._template.ProductionQueue || !this._template.ProductionQueue.Entities || !this._template.ProductionQueue.Entities._string)
 			return undefined;
 		var civ = this.civ();
 		var templates = this._template.ProductionQueue.Entities._string.replace(/\{civ\}/g, civ).split(/\s+/);
@@ -298,7 +296,7 @@ var EntityTemplate = Class({
 	},
 
 	researchableTechs: function() {
-		if (!this._template.ProductionQueue || !this._template.ProductionQueue.Technologies)
+		if (!this._template.ProductionQueue || !this._template.ProductionQueue.Technologies || !this._template.ProductionQueue._string)
 			return undefined;
 		var templates = this._template.ProductionQueue.Technologies._string.split(/\s+/);
 		return templates;
@@ -325,7 +323,7 @@ var EntityTemplate = Class({
 			return undefined;
 		return +this._template.ResourceSupply.Amount;
 	},
-						   
+
 	maxGatherers: function()
 	{
 		if (this._template.ResourceSupply !== undefined)
@@ -351,7 +349,7 @@ var EntityTemplate = Class({
 
 
 	garrisonableClasses: function() {
-		if (!this._template.GarrisonHolder)
+		if (!this._template.GarrisonHolder || !this._template.GarrisonHolder.List._string)
 			return undefined;
 		return this._template.GarrisonHolder.List._string.split(/\s+/);
 	},

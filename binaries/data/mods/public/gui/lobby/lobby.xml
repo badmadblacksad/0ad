@@ -1,228 +1,220 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <objects>
-  <script file="gui/lobby/lobby.js"/>
+	<script file="gui/common/functions_global_object.js"/>
+	<script file="gui/common/functions_utility.js"/>
+	<script file="gui/common/timer.js"/>
 
-  <script file="gui/common/functions_global_object.js"/>
-  <script file="gui/common/functions_utility.js"/>
+	<script file="gui/lobby/lobby.js"/>
 
-  <object type="image" style="StoneWindow" size="0 0 100% 100%" name="lobbyWindow">
+	<object type="image" style="StoneWindow" size="0 0 100% 100%" name="lobbyWindow">
 
-    <object style="TitleText" type="text" size="50%-128 0%+4 50%+128 36">
-      Multiplayer Lobby
-    </object>
+		<object style="TitleText" type="text" size="50%-128 0%+4 50%+128 36">
+			Multiplayer Lobby
+		</object>
 
-    <action on="Tick">
-      onTick();
-    </action>
+		<action on="Tick">
+			onTick();
+		</action>
 
-    <!-- START Upper part of the gui containing the list of games and some details about the selected game -->
-    <object size="25 50 100%-25 0%+400">
-      <object name="gameInfoEmpty" size="0 0 340 100%-10" type="image" sprite="BackgroundIndentFillDark" hidden="false">
-        <object size="50%-110 50%-50 50%+110 50%+50" type="image" sprite="productLogo"/>
-      </object>
-      <object name="gameInfo" size="0 0 340 100%-10" type="image" sprite="BackgroundIndentFillDark" hidden="true">
-        <object name="sgMapName" size="170 10 100%-10 30" type="text" style="TitleText"/>
-        <object name="sgMapPreview" size="10 10 160 160" type="image" sprite="BackgroundIndentFillDark"/>
+		<!-- START Upper part of the gui containing the list of games and some details about the selected game -->
+		<object size="25 50 100%-25 0%+400">
+			<object name="gameInfoEmpty" size="0 0 340 100%-10" type="image" sprite="BackgroundIndentFillDark" hidden="false">
+				<object size="50%-110 50%-50 50%+110 50%+50" type="image" sprite="productLogo"/>
+			</object>
+			<object name="gameInfo" size="0 0 340 100%-10" type="image" sprite="BackgroundIndentFillDark" hidden="true">
+				<object name="sgMapName" size="170 10 100%-10 30" type="text" style="TitleText"/>
+				<object name="sgMapPreview" size="10 10 160 160" type="image" sprite="BackgroundIndentFillDark"/>
 
-        <!-- First line -->
-        <object size="170 40 100%-10 60">
-          <!-- Number of Players -->
-          <object size="0 0 80 100%">
-            <object size="0 0 100% 100%" type="text" style="LeftLabelText">Players:</object>
-          </object>
+				<!-- First line -->
+				<object size="170 40 100%-10 60">
+				<!-- Number of Players -->
+					<object size="0 0 80 100%">
+						<object size="0 0 100% 100%" type="text" style="LeftLabelText">Players:</object>
+					</object>
+					<object size="80 0 100% 100%">
+						<object name="sgNbPlayers" size="0 0 100% 100%" type="text" style="LeftLabelText"/>
+					</object>
+				</object>
 
-          <object size="80 0 100% 100%">
-            <object name="sgNbPlayers" size="0 0 100% 100%" type="text" style="LeftLabelText"/>
-          </object>
-        </object>
+				<!-- Second line -->
+				<object size="170 60 100%-10 120">
+					<object name="sgPlayersNames" size="0 0 100% 100%" type="text" style="CenteredLabelText" textcolor="50 100 140"/>
+				</object>
 
-        <object size="170 60 100%-10 120">
-          <object name="sgPlayersNames" size="0 0 100% 100%" type="text" style="CenteredLabelText" textcolor="50 100 140"/>
-        </object>
+				<!-- Third line -->
+				<object size="170 120 100%-10 140">
+					<!-- Map size -->
+					<object size="0 0 80 100%">
+						<object size="0 0 100% 100%" type="text" style="LeftLabelText">Map size:</object>
+					</object>
+					<object size="80 0 100% 100%">
+						<object name="sgMapSize" size="0 0 100% 100%" type="text" style="LeftLabelText"/>
+					</object>
+				</object>
 
-        <!-- Third line -->
-        <object size="170 120 100%-10 140">
-          <!-- Map size -->
-          <object size="0 0 80 100%">
-            <object size="0 0 100% 100%" type="text" style="LeftLabelText">Map size:</object>
-          </object>
+				<!-- Fourth line -->
+				<object size="170 140 100%-10 160">
+					<!-- Victory condition -->
+					<object size="0 0 80 100%">
+						<object size="0 0 100% 100%" type="text" style="LeftLabelText">Victory:</object>
+					</object>
+					<object size="80 0 100% 100%">
+						<object name="sgVictoryCondition" size="0 0 100% 100%" type="text" style="LeftLabelText"/>
+					</object>
+				</object>
 
-          <object size="80 0 100% 100%">
-            <object name="sgMapSize" size="0 0 100% 100%" type="text" style="LeftLabelText"/>
-          </object>
-        </object>
+				<object type="image" sprite="BackgroundIndentFillDark" size="10 170 100%-10 100%-40">
+					<object name="sgMapDescription" type="text" style="MapDescription" size="0 0 100% 100%"/>
+				</object>
 
-        <!-- Fourth line -->
-        <object size="170 140 100%-10 160">
-          <!-- Victory condition -->
-          <object size="0 0 80 100%">
-            <object size="0 0 100% 100%" type="text" style="LeftLabelText">Victory:</object>
-          </object>
+				<object type="button" style="StoneButton" size="100%-100 100%-30 100%-10 100%-10">
+					Join
+					<action on="Press">
+						joinSelectedGame();
+					</action>
+				</object>
+			</object>
 
-          <object size="80 0 100% 100%">
-            <object name="sgVictoryCondition" size="0 0 100% 100%" type="text" style="LeftLabelText"/>
-          </object>
-        </object>
+			<object name="gamesBox"
+				style="StoneList"
+				type="olist"
+				size="350 0 100% 100%-40"
+				tooltip_style="pgFloatingToolTip"
+				sprite_heading="colour:0 0 0 255"
+				textcolor="210 100 0 255">
+				<action on="SelectionChange"> selectGame(this.selected);</action>
+				<def id="name" heading="Name" color="0 60 0" width="180"/>
+				<!--<def id="ip" heading="IP" color="0 128 128" width="170"/>-->
+				<def id="mapName" heading="Map name" color="128 128 128" width="140"/>
+				<def id="mapSize" heading="Map size" color="128 128 128" width="100"/>
+				<def id="victoryCondition" heading="Victory" color="0 128 128" width="100"/>
+				<def id="nPlayers" heading="Players" color="0 128 128" width="30"/>
+			</object>
 
-        <object type="image" sprite="BackgroundIndentFillDark" size="10 170 100%-10 100%-40">
-          <object name="sgMapDescription" type="text" style="MapDescription" size="0 0 100% 100%"/>
-        </object>
+			<!-- START Filter panel -->
+			<object name="filterPanel" size="380 100%-140 700 100%-10" type="image" sprite="BackgroundIndentFillDark" hidden="true">
+				<object type="text" size="10 10 110 30" text_align="left" textcolor="white">Map size :</object>
+				<object name="mapSizeFilter"
+					type="dropdown"
+					style="SmallStoneDropDown"
+					size="120 10 310 30">
+					<action on="SelectionChange">applyFilters();</action>
+				</object>
 
-        <object type="button" style="StoneButton" size="100%-100 100%-30 100%-10 100%-10">
-          Join
-          <action on="Press">
-            <![CDATA[
-             joinSelectedGame();
-            ]]>
-          </action>
-        </object>
-      </object>
+				<object type="text" size="10 40 150 60" text_align="left" textcolor="white">Number of players :</object>
+				<object name="playersNumberFilter"
+					type="dropdown"
+					style="SmallStoneDropDown"
+					size="160 40 310 60">
+					<action on="SelectionChange">applyFilters();</action>
+				</object>
 
-      <object name="gamesBox"
-        style="StoneList"
-        type="olist"
-        size="350 0 100% 100%-40"
-        tooltip_style="pgFloatingToolTip"
-        sprite_heading="colour:0 0 0 255"
-        textcolor="210 100 0 255">
-        <action on="SelectionChange"> selectGame(this.selected);</action>
-        <def id="name" heading="Name" color="0 60 0" width="180"/>
-        <!--<def id="ip" heading="IP" color="0 128 128" width="170"/>-->
-        <def id="mapName" heading="Map name" color="128 128 128" width="140"/>
-        <def id="mapSize" heading="Map size" color="128 128 128" width="100"/>
-        <def id="victoryCondition" heading="Victory" color="0 128 128" width="100"/>
-        <def id="nPlayers" heading="Players" color="0 128 128" width="30"/>
-      </object>
+				<object type="text" size="10 70 150 90" text_align="left" textcolor="white">Victory condition :</object>
+				<object name="victoryConditionFilter"
+					type="dropdown"
+					style="SmallStoneDropDown"
+					size="160 70 310 90">
+					<action on="SelectionChange">applyFilters();</action>
+				</object>
 
-      <!-- START Filter panel -->
-      <object name="filterPanel" size="380 100%-140 700 100%-10" type="image" sprite="BackgroundIndentFillDark" hidden="true">
-        <object type="text" size="10 10 110 30" text_align="left" textcolor="white">Map size :</object>
-        <object name="mapSizeFilter"
-          type="dropdown"
-          style="SmallStoneDropDown"
-          size="120 10 310 30">
-        <action on="SelectionChange">applyFilters();</action>
-        </object>
+				<object type="text" size="10 100 130 120" text_align="left" textcolor="white">Hide full games :</object>
+				<object name="hideFullFilter"
+					type="checkbox"
+					checked="true"
+					style="StoneCrossBox"
+					size="140 105 150 120">
+					<action on="Press">applyFilters();</action>
+				</object>
 
-        <object type="text" size="10 40 150 60" text_align="left" textcolor="white">Number of players :</object>
-        <object name="playersNumberFilter"
-          type="dropdown"
-          style="SmallStoneDropDown"
-          size="160 40 310 60">
-        <action on="SelectionChange">applyFilters();</action>
-        </object>
+				<object type="button" style="StoneButton" size="100%-110 100%-30 100%-10 100%-10">
+					Reset
+					<action on="Press">resetFilters();</action>
+				</object>
 
-        <object type="text" size="10 70 150 90" text_align="left" textcolor="white">Victory condition :</object>
-        <object name="victoryConditionFilter"
-          type="dropdown"
-          style="SmallStoneDropDown"
-          size="160 70 310 90">
-        <action on="SelectionChange">applyFilters();</action>
-        </object>
+			</object>
+			<!-- END Filter panel -->
 
-        <object type="text" size="10 100 130 120" text_align="left" textcolor="white">Hide full games :</object>
-        <object name="hideFullFilter"
-          type="checkbox"
-          checked="true"
-          style="StoneCrossBox"
-          size="140 105 150 120">
-        <action on="Press">applyFilters();</action>
-        </object>
+			<object name="gamesBar" size="350 100%-35 100% 100%">
+				<object type="button" style="StoneButton" size="0 0 20 20">
+					>>
+					<action on="Press"><![CDATA[
+						if(this.caption == ">>")
+						{
+							this.caption = "<<";
+							getGUIObjectByName("filterPanel").hidden = false;
+							getGUIObjectByName("gamesBox").size="350 0 100% 100%-150";
+						}
+						else 
+						{
+							this.caption = ">>";
+							getGUIObjectByName("filterPanel").hidden = true;
+							getGUIObjectByName("gamesBox").size="350 0 100% 100%-40";
+						}
+					]]></action>
+				</object>
+			</object>
+		</object>
+		<!-- END Upper part of the gui containing the list of games and some details about the selected game -->
 
-        <object type="button" style="StoneButton" size="100%-110 100%-30 100%-10 100%-10">
-          Reset
-          <action on="Press">resetFilters();</action>
-        </object>
+		<!-- START Lower part of the gui containing the chat and the list of players -->
+		<object size="25 0%+400 100%-25 100%-25">
+			<object name="playersBox"
+				style="StoneList"
+				type="olist"
+				size="100%-210 0 100% 100%-10"
+				tooltip_style="pgFloatingToolTip"
+				sprite_heading="colour:0 0 0">
+				<def id="status" heading="Status" color="0 60 60" width="60"/>
+				<def id="name" heading="Name" color="0 60 0" width="50"/>
+			</object>
 
-      </object>
-      <!-- END Filter panel -->
+			<object name="chatPanel" size="0 0 100%-220 100%-10" type="image" sprite="BackgroundIndentFillDark">
+				<object name="chatText" size="3 1 100%-1 100%-25" type="text" style="ChatPanel"/>
+				<object name="chatInput" size="2 100%-23 100%-66 100%-3" type="input" style="StoneInput">
+					<action on="Press">submitChatInput();</action>
+				</object>
 
-      <object name="gamesBar" size="350 100%-35 100% 100%">
-        <object type="button" style="StoneButton" size="0 0 20 20">
-          >>
-          <action on="Press"><![CDATA[
-          if(this.caption == ">>")
-          {
-            this.caption = "<<";
-            getGUIObjectByName("filterPanel").hidden = false;
-            getGUIObjectByName("gamesBox").size="350 0 100% 100%-150";
-          }
-          else 
-          {
-            this.caption = ">>";
-            getGUIObjectByName("filterPanel").hidden = true;
-            getGUIObjectByName("gamesBox").size="350 0 100% 100%-40";
-          }
-          ]]>
-          </action>
-        </object>
-      </object>
-    </object>
-    <!-- END Upper part of the gui containing the list of games and some details about the selected game -->
+				<object size="100%-65 100%-25 100%-1 100%" type="button" style="StoneButton">
+					Send
+					<action on="Press">submitChatInput();</action>
+				</object>
+			</object>
+		</object>
+		<!-- END Lower part of the gui containing the chat and the list of players -->
 
-    <!-- START Lower part of the gui containing the chat and the list of players -->
-    <object size="25 0%+400 100%-25 100%-25">
-      <object name="playersBox"
-        style="StoneList"
-        type="olist"
-        size="100%-210 0 100% 100%-10"
-        tooltip_style="pgFloatingToolTip"
-        sprite_heading="colour:0 0 0">
-        <def id="status" heading="Status" color="0 60 60" width="60"/>
-        <def id="name" heading="Name" color="0 60 0" width="50"/>
-      </object>
+		<!-- START Navigation bar containing the 'Main menu' button -->
+		<object name="navBar" size="20 25 100%-20 45">
+			<object name="updateStatusText" size="100%-440 0 100%-240 20" type="text" style="RightLabelText"/>
+			<object name="hostButton" type="button" style="StoneButton" size="100%-220 0 100%-120 20">
+				Host Game
+				<action on="Press">
+					// Open Multiplayer connection window with host option.
+					Engine.PushGuiPage("page_gamesetup_mp.xml", { multiplayerGameType: "host", name: g_Name });
+				</action>
+			</object>
 
-      <object name="chatPanel" size="0 0 100%-220 100%-10" type="image" sprite="BackgroundIndentFillDark">
-        <object name="chatText" size="3 1 100%-1 100%-25" type="text" style="ChatPanel"/>
-        <object name="chatInput" size="2 100%-23 100%-66 100%-3" type="input" style="StoneInput">
-          <action on="Press">submitChatInput();</action>
-        </object>
+			<!--
+			<object type="button" style="StoneButton" size="100%-340 0 100%-240 20">
+				Connect
+				<action on="Press">lobbyConnect();</action>
+			</object>
 
-        <object size="100%-65 100%-25 100%-1 100%" type="button" style="StoneButton">
-          Send
-          <action on="Press">submitChatInput();</action>
-        </object>
-      </object>
-    </object>
-    <!-- END Lower part of the gui containing the chat and the list of players -->
+			<object type="button" style="StoneButton" size="100%-220 0 100%-120 20">
+				Disconnect
+				<action on="Press">lobbyDisconnect();</action>
+			</object>
+			-->
 
-    <!-- START Navigation bar containing the 'Main menu' button -->
-    <object name="navBar" size="20 25 100%-20 45">
-      <object name="updateStatusText" size="100%-440 0 100%-240 20" type="text" style="RightLabelText"/>
-      <object name="hostButton" type="button" style="StoneButton" size="100%-220 0 100%-120 20">
-        Host Game
-        <action on="Press">
-        <![CDATA[
-          // Open Multiplayer connection window with host option.
-          Engine.PushGuiPage("page_gamesetup_mp.xml", { multiplayerGameType: "host", name: g_Name });
-        ]]>
-        </action>
-      </object>
+			<object type="button" style="StoneButton" size="100%-100 0 100% 20">
+				Main Menu
+				<action on="Press">
+					lobbyStop();
+					Engine.SwitchGuiPage("page_pregame.xml");
+				</action>
+			</object>
+		</object>
+		<!-- END Navigation bar containing the 'Main menu' button -->
 
-      <!--
-      <object type="button" style="StoneButton" size="100%-340 0 100%-240 20">
-        Connect
-        <action on="Press">lobbyConnect();</action>
-      </object>
-
-      <object type="button" style="StoneButton" size="100%-220 0 100%-120 20">
-        Disconnect
-        <action on="Press">lobbyDisconnect();</action>
-      </object>
-      -->
-
-      <object type="button" style="StoneButton" size="100%-100 0 100% 20">
-        Main Menu
-        <action on="Press">
-        <![CDATA[
-        lobbyStop();
-        Engine.SwitchGuiPage("page_pregame.xml");
-        ]]>
-        </action>
-      </object>
-    </object>
-    <!-- END Navigation bar containing the 'Main menu' button -->
-
-  </object>
+	</object>
 </objects>

@@ -8,40 +8,36 @@ var g_PlayerAssignments; // used when rejoining
 
 function init(attribs)
 {
-        switch (attribs.multiplayerGameType)
-        {
-                case "join":
-			if(!Engine.HasXmppClient())
-			{
-				getGUIObjectByName("pageJoin").hidden = false;
-				getGUIObjectByName("pageHost").hidden = true;
-			}
-			else
-			{
-				if (startJoin(attribs.name, attribs.ip))
-				{
-					switchSetupPage("pageJoin", "pageConnecting");
-				}
-			}
-                        break;
-                case "host":
-                        getGUIObjectByName("pageJoin").hidden = true;
-                        getGUIObjectByName("pageHost").hidden = false;
-			if(!Engine.HasXmppClient())
-			{
-				getGUIObjectByName("hostPlayerNameWrapper").hidden = false;
-			}
-			else
-			{
-				getGUIObjectByName("hostServerNameWrapper").hidden = false;
-				getGUIObjectByName("hostPlayerName").caption = attribs.name;
-				getGUIObjectByName("hostServerName").caption = attribs.name + "'s game";
-			}
-                        break;
-                default:
-                        error("Unrecognised multiplayer game type : " + attribs.multiplayerGameType);
-                        break;
-        }
+	switch (attribs.multiplayerGameType)
+	{
+	case "join":
+		if(Engine.HasXmppClient())
+		{
+			if (startJoin(attribs.name, attribs.ip))
+				switchSetupPage("pageJoin", "pageConnecting");
+		}
+		else
+		{
+			getGUIObjectByName("pageJoin").hidden = false;
+			getGUIObjectByName("pageHost").hidden = true;
+		}
+		break;
+	case "host":
+		getGUIObjectByName("pageJoin").hidden = true;
+		getGUIObjectByName("pageHost").hidden = false;
+		if(Engine.HasXmppClient())
+		{
+			getGUIObjectByName("hostServerNameWrapper").hidden = false;
+			getGUIObjectByName("hostPlayerName").caption = attribs.name;
+			getGUIObjectByName("hostServerName").caption = attribs.name + "'s game";
+		}
+		else
+			getGUIObjectByName("hostPlayerNameWrapper").hidden = false;
+		break;
+	default:
+		error("Unrecognised multiplayer game type : " + attribs.multiplayerGameType);
+		break;
+	}
 }
 
 function cancelSetup()
@@ -192,6 +188,8 @@ function startHost(playername, servername)
 	startConnectionStatus("server");
 	g_ServerName = servername;
 
+	// Set player lobby presence
+	Engine.LobbySetPlayerPresence("playing");
 	return true;
 }
 
@@ -211,5 +209,7 @@ function startJoin(playername, ip)
 	}
 
 	startConnectionStatus("client");
+	// Set player lobby presence
+	Engine.LobbySetPlayerPresence("playing");
 	return true;
 }
